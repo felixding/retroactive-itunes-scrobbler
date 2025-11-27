@@ -1,0 +1,5 @@
+config.yml
+*.log
+.DS_Store
+.bundle/
+vendor/

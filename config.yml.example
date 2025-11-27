@@ -1,0 +1,6 @@
+lastfm:
+  api_key: YOUR_API_KEY_HERE
+  api_secret: YOUR_API_SECRET_HERE
+  session_key: YOUR_SESSION_KEY_HERE
+scrobble:
+  progress_ratio: 0.5   # scrobble after this fraction of the track

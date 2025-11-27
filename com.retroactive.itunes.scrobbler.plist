@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.retroactive.itunes.scrobbler</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/opt/homebrew/opt/ruby/bin/bundle</string>
+        <string>exec</string>
+        <string>ruby</string>
+        <string>app.rb</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/felixding/projects/retroactive-itunes-scrobbler</string>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>/Users/felixding/Library/Logs/retroactive-itunes-scrobbler/stdout.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/Users/felixding/Library/Logs/retroactive-itunes-scrobbler/stderr.log</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/opt/ruby/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+</dict>
+</plist>
