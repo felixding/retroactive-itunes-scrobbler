@@ -12,6 +12,10 @@ require 'json'
 require 'yaml'
 require 'logger'
 
+ENV['LANG'] ||= 'en_US.UTF-8'
+Encoding.default_external = Encoding::UTF_8
+Encoding.default_internal = Encoding::UTF_8
+
 puts 'Script starting...'
 
 # Load configuration
@@ -80,14 +84,15 @@ class App
       end tell
     APPLESCRIPT
 
-    result = `/usr/bin/osascript -e '#{script.gsub("'", "'\\''")}' 2>/dev/null`.strip
+    raw_result = `/usr/bin/osascript -e '#{script.gsub("'", "'\\''")}' 2>/dev/null`
+    result = sanitize_text(raw_result).strip
     return nil if result.empty?
 
     parts = result.split('|')
     {
-      name: parts[0],
-      artist: parts[1],
-      album: parts[2],
+      name: sanitize_text(parts[0]),
+      artist: sanitize_text(parts[1]),
+      album: sanitize_text(parts[2]),
       duration: parts[3].to_i,
       position: parts[4].to_i
     }
@@ -98,6 +103,14 @@ class App
 
   def playing?
     player_state == 'playing'
+  end
+
+  private
+
+  def sanitize_text(text)
+    return '' unless text
+
+    text.to_s.dup.force_encoding('UTF-8').encode('UTF-8', invalid: :replace, undef: :replace, replace: '').scrub
   end
 end
 
@@ -131,6 +144,11 @@ class LastFmScrobbler
     track_id = "#{artist} - #{track_name}"
 
     $logger.info "Track status: #{track_id} pos=#{position}s/#{duration}s"
+
+    if artist.to_s.empty? || track_name.to_s.empty?
+      $logger.warn "Skipping scrobble: missing metadata (artist='#{artist}', track='#{track_name}')"
+      return
+    end
 
     if @scrobbled_current && @current_track_key == track_id
       $logger.info 'Skip: already scrobbled this track in current playback'
